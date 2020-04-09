@@ -1,0 +1,2 @@
+/resources/faiss_index filter=lfs diff=lfs merge=lfs -text
+/resources/cord19_data filter=lfs diff=lfs merge=lfs -text
