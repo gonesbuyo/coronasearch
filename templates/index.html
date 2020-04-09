@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>CoronaSearch</title>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163264674-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-163264674-1');
+    </script>
+
+
     <!-- Bootstrap core CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 
     <style>
@@ -35,6 +46,54 @@
   <body>
 
 <main role="main">
+
+  <!-- About Modal -->
+  <div class="modal fade" id="aboutModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">About this project</h4>
+          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <p align="justify">
+            <b>Who built this?</b><br>Hi! My name is Gonzalo. I'm an NLP & AI engineer from Madrid (Spain). Feel free to reach me out with any questions, suggestions or also if you just want to hang out! You can find my contact info below.<hr>
+
+            <b>What is the purpose of this site?</b><br>This website hosts a multilingual search tool that is specially aimed to ease research in coronavirus by making the available literature more accessible and centralised. Therefore, its main objective is to reach researchers and doctors, but anyone interested in getting informed about several aspects of the pandemic may also benefit from it. 😀<hr>
+
+            <b>How is it used?</b><br>You will be able to retrieve 44K+ papers on coronavirus-related topics from publishers (namely American Society for Microbiology, BMJ, Elsevier, New England Journal of Medicine, SAGE, Springer Nature and Wiley) listed in the main health science preprints (<a href="https://www.biorxiv.org/">bioRxiv</a> and <a href="https://www.medrxiv.org/">medRxiv</a> among others). The search engine is multilingual, meaning that thanks to the AI model that it uses it can handle requests in several languages and also retrieve papers in different languages for the same query. Also notice that the results will be as good as the papers available.<hr>
+
+            <b>How does it differ from other search engines?</b><br>The first difference is the scope, this search engine already contains a curated selection of resources related to research in the COVID-19 instead of documents of any type or subject. Furthermore, it does not only take into account the title but also the content of the paper and can return more realistic results that, for example, use related terms even when not directly mentioned in the title. In this way the tool is more semantically flexible thanks to the AI model used.<hr>
+
+            <b>How was it done?</b><br>The project has been developed with the use of <a href="https://pages.semanticscholar.org/coronavirus-research">COVID-19 Open Research Dataset</a> (CORD-19) by <a href="https://allenai.org/">Allen Institute for AI</a>. A subset of papers was first selected with those including a title and a valid abstract making use of <a href="https://allenai.github.io/scispacy/">scispaCy</a>. In order to index the articles, a Deep Natural Language Processing model from Google (<a href="https://ai.googleblog.com/2019/07/multilingual-universal-sentence-encoder.html">Multilingual Universal Sentence Encoder</a>) was applied to each of the abstracts (plus title) to encode them into a vector (512 word embedding). Finally, the vectors where indexed using Facebook's <a href="https://github.com/facebookresearch/faiss">Faiss</a> library, which is also used to retrieve the relevant documents. The site was deployed using the Flask microframework with gunicorn and Nginx server runnning on a AWS EC2.<hr>
+          </p>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <a class="btn btn-info" href="https://twitter.com/sigmoider" role="button" target="_blank">Twitter</a>
+          <a class="btn btn-primary" href="https://www.linkedin.com/in/gonesbuyo/" role="button" target="_blank">LinkedIn</a>
+          <a class="btn btn-danger" href="mailto:gonesbuyo@gmail.com" role="button" target="_blank">Gmail</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row-reverse">
+    <div class="p-2">
+      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#aboutModal">About</button> 
+    </div>
+    <!--
+    <div class="p-2">
+      <button type="button" name="submit" value="faq" class="btn btn-outline-primary">FAQ</button>
+    </div>
+    -->
+  </div>
   <section class="jumbotron text-center">
     <div class="container">
       <a class="link-header" href="/">
@@ -52,6 +111,10 @@
       </form>
     </div>
   </section>
+
+  {% if query %}
+  <p class="text-center">Results for <i>{{ query }}:</i></p>
+  {% endif %}
 
   <div class="album py-5 bg-light">
     <div class="container">
@@ -89,19 +152,6 @@
                             <li><b>Source:</b> {{ paper.source_x }}</li><hr>
                             <li><b>License:</b> {{ paper.license }}</li>
                           </ul>
-                          
-                          <!--
-                          <b>Date: </b> {{ paper.publish_time }}<br><br>
-                          <b>Authors:</b> {{ paper.authors }}<br><br>
-                          <b>Abstract:</b><br>
-                          {{ paper.abstract }}<br><br>
-                          <b>Journal:</b> {{ paper.journal }}<br><br>
-                          <b>DOI: </b> {{ paper.doi }}<br><br>
-                          <b>PMC ID: </b> {{ paper.pmcid }}<br><br>
-                          <b>PubMed ID: </b> {{ paper.pubmed_id }}<br><br>
-                          <b>Source:</b> {{ paper.source_x }}<br><br>
-                          <b>License:</b> {{ paper.license }}
-                          -->
 
                         </p>
                       </div>
@@ -134,5 +184,9 @@
 
 </main>
 </body>
-<p class="text-center"><i>Disclaimer: This service is experimental. The site is provided "AS IS" and the author expressly disclaims all warranties of any kind, as to the content, accuracy, completeness, adequacy or timeliness of information on CoronaSearch.<br> The use of information on CoronaSearch is strictly voluntary and at the user's sole risk and responsibility.</i></p>
+
+<div class="footer">
+  <p class="text-center"><i>Disclaimer: This service is experimental. The site is provided "AS IS" and the author expressly disclaims all warranties of any kind, as to the content, accuracy, completeness, adequacy or timeliness of information on CoronaSearch. The use of information on CoronaSearch is strictly voluntary and at the user's sole risk and responsibility.</i></p>
+</div>
+
 </html>

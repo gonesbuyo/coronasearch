@@ -28,6 +28,7 @@ application = Flask(__name__)
 @application.route('/', methods=['GET', 'POST'])
 def home():
     papers = []
+    input_text = None
 
     if request.method == 'POST':
 
@@ -52,7 +53,7 @@ def home():
                     result_dict[key] = result[key]
                 papers.append(result_dict)
 
-    return render_template('index.html', papers=papers)
+    return render_template('index.html', papers=papers, query=input_text)
 
 # run the app.
 if __name__ == "__main__":

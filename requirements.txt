@@ -1,6 +1,4 @@
 flask
-flask-bootstrap
-requests
 faiss-cpu
 pandas
 numpy
