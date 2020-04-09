@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CoronaSearch</title>
+
+    <!-- Bootstrap core CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='album.css') }}" rel="stylesheet">
+  </head>
+  <body>
+
+<main role="main">
+  <section class="jumbotron text-center">
+    <div class="container">
+      <a class="link-header" href="/">
+      <h1 class="jumbotron-heading">CoronaSearch</h1>
+      </a>
+      <p class="lead text-muted">AI-powered multilingual search for COVID-19 academic papers.</p>
+      <form method="POST">
+      <div class="input-group mb-3">
+        <input type="text" name="query" class="form-control">
+      </div>
+      <p>
+        <button type="submit" name="submit" value="search" class="btn btn-primary my-2">Paper Search</button>
+        <button type="submit" name="submit" value="top10" class="btn btn-secondary my-2">Top 10 Results</button>
+      </p>
+      </form>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        {% for paper in papers %}
+        <div class="col-md-12">
+          <div class="card mb-4 shadow-sm">
+            <!-- img class="bd-placeholder-img card-img-top" width="100%" height="100" src="{{ paper.thumbnail }}" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img -->
+            <div class="card-body">
+              <p class="card-text">{{ paper.title }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+
+                <!-- The Modal -->
+                <div class="modal fade" id="myModal{{paper.cord_uid}}">
+                  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" id="{{paper.cord_uid}}">
+                    <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">{{ paper.title }}</h4>
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">&times;</button>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                        <p align="justify">
+                          <ul>
+                            <li><b>Date: </b> {{ paper.publish_time }}</li><hr>
+                            <li><b>Authors:</b> {{ paper.authors }}</li><hr>
+                            <li><b>Abstract:</b><br>{{ paper.abstract }}</li><hr>
+                            <li><b>Journal:</b> {{ paper.journal }}</li><hr>
+                            <li><b>DOI: </b> {{ paper.doi }}</li><hr>
+                            <li><b>PMC ID: </b> {{ paper.pmcid }}</li><hr>
+                            <li><b>PubMed ID: </b> {{ paper.pubmed_id }}</li><hr>
+                            <li><b>Source:</b> {{ paper.source_x }}</li><hr>
+                            <li><b>License:</b> {{ paper.license }}</li>
+                          </ul>
+                          
+                          <!--
+                          <b>Date: </b> {{ paper.publish_time }}<br><br>
+                          <b>Authors:</b> {{ paper.authors }}<br><br>
+                          <b>Abstract:</b><br>
+                          {{ paper.abstract }}<br><br>
+                          <b>Journal:</b> {{ paper.journal }}<br><br>
+                          <b>DOI: </b> {{ paper.doi }}<br><br>
+                          <b>PMC ID: </b> {{ paper.pmcid }}<br><br>
+                          <b>PubMed ID: </b> {{ paper.pubmed_id }}<br><br>
+                          <b>Source:</b> {{ paper.source_x }}<br><br>
+                          <b>License:</b> {{ paper.license }}
+                          -->
+
+                        </p>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                        Paper details:&nbsp;
+                        <a class="btn btn-primary" href="{{ paper.url }}" role="button" target="_blank">URL</a>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-sm btn-primary " data-toggle="modal" data-target="#myModal{{paper.cord_uid}}">
+                  More info
+                </button>
+
+                <small class="text-muted">
+                  {{ paper.source_x }} ({{ paper.publish_time }})</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+<p class="text-center"><i>Disclaimer: This service is experimental. The site is provided "AS IS" and the author expressly disclaims all warranties of any kind, as to the content, accuracy, completeness, adequacy or timeliness of information on CoronaSearch.<br> The use of information on CoronaSearch is strictly voluntary and at the user's sole risk and responsibility.</i></p>
+</html>

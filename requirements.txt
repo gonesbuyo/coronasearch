@@ -1,0 +1,8 @@
+flask
+flask-bootstrap
+requests
+faiss-cpu
+pandas
+numpy
+tensorflow-text
+tensorflow-hub
